@@ -683,6 +683,13 @@ function $HttpProvider() {
         return promise;
       };
 
+      promise.notify = function(fn) {
+        promise.then(null, null, function(event) {
+          fn(event, config);
+        });
+        return promise;
+      };
+
       return promise;
 
       function transformResponse(response) {
@@ -926,7 +933,7 @@ function $HttpProvider() {
           reqHeaders[(config.xsrfHeaderName || defaults.xsrfHeaderName)] = xsrfValue;
         }
 
-        $httpBackend(config.method, url, reqData, done, reqHeaders, config.timeout,
+        $httpBackend(config.method, url, reqData, progress, done, reqHeaders, config.timeout,
             config.withCredentials, config.responseType);
       }
 
@@ -953,6 +960,9 @@ function $HttpProvider() {
         if (!$rootScope.$$phase) $rootScope.$apply();
       }
 
+      function progress(event) {
+        deffered.notify(event);
+      }
 
       /**
        * Resolves the raw $http promise.
