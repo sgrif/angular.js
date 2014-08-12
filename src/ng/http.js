@@ -961,7 +961,7 @@ function $HttpProvider() {
       }
 
       function progress(event) {
-        deffered.notify(event);
+        deferred.notify(event);
       }
 
       /**
